@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Morgan — Full Stack Developer & UI/UX Designer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar and smooth transitions */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased transition-colors duration-300">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-sm font-medium">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600 text-lg"></i>
+        <span id="toast-message">Action successful!</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#hero" class="flex items-center space-x-2 text-xl font-extrabold tracking-tight">
+                <span class="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">AM.</span>
+                <span class="hidden sm:inline text-slate-700 dark:text-slate-300 font-semibold text-base">Alex Morgan</span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#about" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">About</a>
+                <a href="#skills" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Skills</a>
+                <a href="#projects" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Projects</a>
+                <a href="#resume" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Resume</a>
+                <a href="#contact" class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Contact</a>
+            </nav>
+
+            <!-- Actions: Theme Toggle & Mobile Menu Button -->
+            <div class="flex items-center space-x-3">
+                <button id="theme-toggle" aria-label="Toggle Theme" class="p-2.5 rounded-full bg-slate-200/60 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+                <button id="menu-btn" aria-label="Open Menu" class="md:hidden p-2.5 rounded-full bg-slate-200/60 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-5 shadow-xl transition-all">
+            <div class="flex flex-col space-y-4 text-base font-medium">
+                <a href="#about" class="mobile-link text-slate-700 dark:text-slate-300 hover:text-indigo-600 transition-colors">About</a>
+                <a href="#skills" class="mobile-link text-slate-700 dark:text-slate-300 hover:text-indigo-600 transition-colors">Skills</a>
+                <a href="#projects" class="mobile-link text-slate-700 dark:text-slate-300 hover:text-indigo-600 transition-colors">Projects</a>
+                <a href="#resume" class="mobile-link text-slate-700 dark:text-slate-300 hover:text-indigo-600 transition-colors">Resume</a>
+                <a href="#contact" class="mobile-link text-slate-700 dark:text-slate-300 hover:text-indigo-600 transition-colors">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-gradient-to-b from-indigo-50/50 via-slate-50 to-slate-50 dark:from-slate-900/40 dark:via-slate-950 dark:to-slate-950">
+        <!-- Decorative Glow Backgrounds -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-80 h-80 bg-purple-500/10 dark:bg-purple-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center relative z-10">
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800/60 text-indigo-600 dark:text-indigo-400 text-xs font-semibold mb-8 animate-bounce">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
+                <span>Available for freelance & full-time roles</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-4xl mx-auto leading-tight">
+                Crafting digital experiences with <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">precision & passion</span>
+            </h1>
+
+            <p class="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto font-normal">
+                Hi, I'm <strong class="text-slate-900 dark:text-white font-semibold">Alex Morgan</strong>. A passionate <span id="typewriter" class="text-indigo-600 dark:text-indigo-400 font-semibold border-r-2 border-indigo-600 pr-1 animate-pulse"></span>
+            </p>
+
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#projects" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all transform hover:-translate-y-0.5">
+                    Explore Projects <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                </a>
+                <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold border border-slate-200 dark:border-slate-800 shadow-sm transition-all transform hover:-translate-y-0.5">
+                    Get in Touch
+                </a>
+            </div>
+
+            <!-- Social Media Quick Links -->
+            <div class="mt-12 flex items-center justify-center space-x-6 text-slate-500 dark:text-slate-400">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-xl" title="GitHub">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-xl" title="LinkedIn">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-xl" title="Twitter">
+                    <i class="fa-brands fa-twitter"></i>
+                </a>
+                <a href="mailto:alex.morgan.dev@example.com" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-xl" title="Email">
+                    <i class="fa-solid fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-in">
+                <h2 class="text-xs font-bold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase">About Me</h2>
+                <h3 class="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Dedicated to building scalable and intuitive web solutions</h3>
+                <p class="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">Get to know more about my background, philosophy, and what drives my engineering passion.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Avatar / Visual card -->
+                <div class="lg:col-span-5 flex justify-center fade-in">
+                    <div class="relative w-72 h-72 sm:w-80 sm:h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 bg-gradient-to-br from-indigo-500 to-purple-600 group">
+                        <img src="https://placehold.co/400x400/4f46e5/ffffff?text=Alex+Morgan" alt="Alex Morgan Avatar" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex items-end p-6">
+                            <div class="text-white">
+                                <p class="font-bold text-lg">Alex Morgan</p>
+                                <p class="text-xs text-indigo-200">San Francisco, CA</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio & Highlights -->
+                <div class="lg:col-span-7 space-y-6 fade-in">
+                    <h4 class="text-2xl font-bold text-slate-900 dark:text-white">Who I Am</h4>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        I am a Full-Stack Software Engineer with over 5 years of professional experience building high-performing web applications, APIs, and engaging user interfaces. I bridge the gap between complex backend systems and clean, responsive frontend designs.
+                    </p>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                        When I'm not writing code or architecting cloud databases, you can find me contributing to open-source developer tools, exploring hiking trails, or experimenting with generative UI design.
+                    </p>
+
+                    <!-- Key Stats Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4">
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-center">
+                            <span class="block text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">5+</span>
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 block">Years Experience</span>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-center">
+                            <span class="block text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">40+</span>
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 block">Completed Projects</span>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-center col-span-2 sm:col-span-1">
+                            <span class="block text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">100%</span>
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 block">Client Satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section with Filters -->
+    <section id="skills" class="py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12 fade-in">
+                <h2 class="text-xs font-bold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase">Technical Expertise</h2>
+                <h3 class="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Skills & Tech Stack</h3>
+                <p class="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">Technologies and tools I leverage daily to turn concepts into reliable software.</p>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-2 mb-12 fade-in">
+                <button onclick="filterSkills('all')" class="skill-filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-500/20" data-filter="all">All Skills</button>
+                <button onclick="filterSkills('frontend')" class="skill-filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800" data-filter="frontend">Frontend</button>
+                <button onclick="filterSkills('backend')" class="skill-filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800" data-filter="backend">Backend</button>
+                <button onclick="filterSkills('tools')" class="skill-filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800" data-filter="tools">Tools & DevOps</button>
+            </div>
+
+            <!-- Skills Grid -->
+            <div id="skills-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 fade-in">
+                <!-- Skill Item -->
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="frontend">
+                    <div class="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-950/40 text-orange-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-html5"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">HTML5</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="frontend">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-css3-alt"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">CSS3 / Tailwind</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="frontend">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-50 dark:bg-yellow-950/40 text-yellow-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-js"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">JavaScript</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="frontend">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-react"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">React & Next.js</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="backend">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-node-js"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">Node.js</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="backend">
+                    <div class="w-12 h-12 rounded-xl bg-green-50 dark:bg-green-950/40 text-green-600 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">MongoDB</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="backend">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">PostgreSQL</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="tools">
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-git-alt"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">Git & GitHub</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="tools">
+                    <div class="w-12 h-12 rounded-xl bg-sky-50 dark:bg-sky-950/40 text-sky-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-docker"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">Docker</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="tools">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">AWS Cloud</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="frontend">
+                    <div class="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-brands fa-figma"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">Figma & UI</span>
+                </div>
+
+                <div class="skill-item p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center text-center group hover:border-indigo-500/50 hover:shadow-xl hover:-translate-y-1 transition-all" data-category="tools">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-terminal"></i>
+                    </div>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">Linux CLI</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-white dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-in">
+                <h2 class="text-xs font-bold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase">Portfolio Showcase</h2>
+                <h3 class="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Featured Projects</h3>
+                <p class="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">A selection of robust web apps and production-ready applications I've engineered.</p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in">
+                <!-- Project 1 -->
+                <div class="rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col group hover:shadow-2xl hover:border-indigo-500/50 transition-all">
+                    <div class="relative h-52 overflow-hidden bg-slate-200 dark:bg-slate-800">
+                        <img src="https://placehold.co/600x400/6366f1/ffffff?text=CloudPulse+Dashboard" alt="CloudPulse App" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-semibold">SaaS</div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">CloudPulse SaaS</h4>
+                            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Real-time server telemetry and cloud infrastructure monitor built with React, Node.js, and WebSockets.
+                            </p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">React</span>
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">Node.js</span>
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">Tailwind</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-indigo-600 flex items-center space-x-1.5">
+                                <i class="fa-brands fa-github"></i> <span>Code</span>
+                            </a>
+                            <a href="https://example.com" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1.5">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> <span>Live Demo</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col group hover:shadow-2xl hover:border-indigo-500/50 transition-all">
+                    <div class="relative h-52 overflow-hidden bg-slate-200 dark:bg-slate-800">
+                        <img src="https://placehold.co/600x400/8b5cf6/ffffff?text=DevMarket+E-Commerce" alt="DevMarket App" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-semibold">E-Commerce</div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">DevMarket Store</h4>
+                            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                High-performance headless e-commerce platform featuring Stripe payments, cart management, and product filtering.
+                            </p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">Next.js</span>
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">Stripe API</span>
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">PostgreSQL</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-indigo-600 flex items-center space-x-1.5">
+                                <i class="fa-brands fa-github"></i> <span>Code</span>
+                            </a>
+                            <a href="https://example.com" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1.5">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> <span>Live Demo</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col group hover:shadow-2xl hover:border-indigo-500/50 transition-all">
+                    <div class="relative h-52 overflow-hidden bg-slate-200 dark:bg-slate-800">
+                        <img src="https://placehold.co/600x400/ec4899/ffffff?text=TaskFlow+Kanban" alt="TaskFlow App" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-xs font-semibold">Productivity</div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">TaskFlow Kanban</h4>
+                            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Collaborative project management tool featuring drag-and-drop boards, real-time sync, and team role permissions.
+                            </p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">React</span>
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">Firebase</span>
+                                <span class="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-xs font-medium">Tailwind</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-indigo-600 flex items-center space-x-1.5">
+                                <i class="fa-brands fa-github"></i> <span>Code</span>
+                            </a>
+                            <a href="https://example.com" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1.5">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> <span>Live Demo</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume / Experience Timeline Section -->
+    <section id="resume" class="py-24 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-in">
+                <h2 class="text-xs font-bold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase">Professional Career</h2>
+                <h3 class="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Experience & Education</h3>
+                <p class="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">My professional journey and academic qualifications.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto fade-in">
+                <!-- Work Experience Column -->
+                <div>
+                    <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-8 flex items-center space-x-3">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </span>
+                        <span>Work Experience</span>
+                    </h4>
+
+                    <div class="space-y-8 pl-4 border-l-2 border-slate-200 dark:border-slate-800 relative">
+                        <!-- Job 1 -->
+                        <div class="relative pl-6">
+                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-600 border-4 border-slate-50 dark:border-slate-950"></div>
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">2022 — Present</span>
+                            <h5 class="text-lg font-bold text-slate-900 dark:text-white mt-1">Senior Full-Stack Engineer</h5>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Apex Software Corp • San Francisco</p>
+                            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Lead frontend and backend architecture for enterprise SaaS solutions. Improved platform loading times by 42% and mentored junior developers.
+                            </p>
+                        </div>
+
+                        <!-- Job 2 -->
+                        <div class="relative pl-6">
+                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-600 border-4 border-slate-50 dark:border-slate-950"></div>
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">2020 — 2022</span>
+                            <h5 class="text-lg font-bold text-slate-900 dark:text-white mt-1">Full-Stack Developer</h5>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Vanguard Web Solutions • Austin, TX</p>
+                            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Developed responsive web apps, RESTful APIs, and integrated third-party payment gateways for diverse global clients.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education Column -->
+                <div>
+                    <h4 class="text-xl font-bold text-slate-900 dark:text-white mb-8 flex items-center space-x-3">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </span>
+                        <span>Education</span>
+                    </h4>
+
+                    <div class="space-y-8 pl-4 border-l-2 border-slate-200 dark:border-slate-800 relative">
+                        <!-- Edu 1 -->
+                        <div class="relative pl-6">
+                            <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-600 border-4 border-slate-50 dark:border-slate-950"></div>
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">2016 — 2020</span>
+                            <h5 class="text-lg font-bold text-slate-900 dark:text-white mt-1">B.S. in Computer Science</h5>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">University of California, Berkeley</p>
+                            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Focused on Software Engineering, Data Structures & Algorithms, and Human-Computer Interaction. Graduated with honors.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-in">
+                <h2 class="text-xs font-bold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase">Let's Connect</h2>
+                <h3 class="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Get In Touch</h3>
+                <p class="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">Have a project in mind or want to discuss potential opportunities? Drop me a message.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-5xl mx-auto fade-in">
+                <!-- Contact Info Cards -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block">Email Me</span>
+                            <button onclick="copyToClipboard('alex.morgan.dev@example.com', 'Email copied to clipboard!')" class="text-slate-800 dark:text-slate-200 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-left flex items-center space-x-2">
+                                <span>alex.morgan.dev@example.com</span>
+                                <i class="fa-regular fa-copy text-xs text-slate-400"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block">Location</span>
+                            <span class="text-slate-800 dark:text-slate-200 font-semibold">San Francisco, CA (Remote Friendly)</span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-medium text-slate-500 dark:text-slate-400 block">Response Time</span>
+                            <span class="text-slate-800 dark:text-slate-200 font-semibold">Within 24 Hours</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-7">
+                    <form id="contact-form" onsubmit="handleContactSubmit(event)" class="p-8 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Your Name</label>
+                            <input type="text" id="name" required class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Your Email</label>
+                            <input type="email" id="email" required class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" placeholder="john@example.com">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Your Message</label>
+                            <textarea id="message" rows="5" required class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none" placeholder="Hello Alex, I'd like to talk about..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5">
+                            Send Message <i class="fa-solid fa-paper-plane ml-2 text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800/80 text-center transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+                &copy; <span id="current-year"></span> Alex Morgan. All rights reserved.
+            </p>
+            <div class="flex items-center space-x-6 text-slate-500 dark:text-slate-400 text-sm">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">GitHub</a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">LinkedIn</a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Set copyright year automatically
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-sun text-sm text-amber-500';
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlElement.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-moon text-sm';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Initialize Theme Icon based on initial state
+        if (htmlElement.classList.contains('dark')) {
+            themeIcon.className = 'fa-solid fa-moon text-sm';
+        } else {
+            themeIcon.className = 'fa-solid fa-sun text-sm text-amber-500';
+        }
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Typewriter Effect
+        const roles = ['Full-Stack Developer.', 'UI/UX Enthusiast.', 'Cloud Architect.', 'Open-Source Contributor.'];
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById('typewriter');
+
+        function typeWriter() {
+            const currentRole = roles[roleIndex];
+            if (isDeleting) {
+                typewriterElement.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = 100;
+            if (isDeleting) typeSpeed /= 2;
+
+            if (!isDeleting && charIndex === currentRole.length) {
+                typeSpeed = 2000; // Pause at end of word
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+        window.addEventListener('load', typeWriter);
+
+        // Skills Category Filter
+        function filterSkills(category) {
+            const buttons = document.querySelectorAll('.skill-filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.className = 'skill-filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all bg-indigo-600 text-white shadow-md shadow-indigo-500/20';
+                } else {
+                    btn.className = 'skill-filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800';
+                }
+            });
+
+            const items = document.querySelectorAll('.skill-item');
+            items.forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Intersection Observer for Fade-In Scroll Animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('appear');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Toast Notification Helper
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = message;
+            toastIcon.className = isSuccess ? 'fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600 text-lg' : 'fa-solid fa-circle-exclamation text-rose-400 dark:text-rose-600 text-lg';
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(text, successMsg) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(successMsg);
+            } catch (err) {
+                showToast('Failed to copy text', false);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Contact Form Submission Handler
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            showToast(`Thank you, ${name}! Your message has been sent successfully.`);
+            document.getElementById('contact-form').reset();
+        }
+    </script>
+</body>
+</html>
